@@ -1,0 +1,140 @@
+﻿@model ToDoList.Web.Models.ListInfo
+@using X.PagedList;
+@{
+    ViewData["Title"] = "Home Page";
+    var temp = @Model.data.Count()/10;
+    var a = 1;
+}
+
+<div>
+    <a asp-action="Create">Create New</a>
+    <div class="d-flex">
+        <input class="form-control me-2" placeholder="Search" id="pencarian" aria-label="Search">
+        <button class="btn btn-outline-success" onclick="Pencarian()">Search</button>
+        <select class="selectVal" style="width:80px;padding-left:20px">
+            <option selected>Size</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+        </select>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">name List</th>
+                <th scope="col">color Hex List</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.data)
+            {
+                <tr>
+                    <th scope="row">@item.idList</th>
+                    <td>@item.nameList</td>
+                    <td>@item.colorHexList</td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new {  id=item.idList }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }   
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+            @for (int i = 0; i < ViewBag.CountData; i++)
+            {
+                <li class="page-item"><a class="page-link" onclick="pagination(@a)">@a</a></li>
+                a++;
+            }
+       @* <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" onclick="pagination(3)">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>*@
+      </ul>
+    </nav>
+</div>
+
+<script>
+    $(document).ready(function() {
+          $("select.selectVal").change(function() {
+            var pencarian = GetURLParameter('key');
+            let selectedItem = $(this).children("option:selected").val();
+              window.location.href = "http://localhost:5077/Home/Index?page=1&size=" + selectedItem+"&key="+pencarian;
+              pagination(a)
+            });
+        });
+
+    
+
+    function pagination(a){
+        var modul = GetURLParameter('page');
+        var size = GetURLParameter('size');
+        var pencarian = GetURLParameter('key');
+        //document.getElementById("modul").innerHTML = modul;
+        var page = a;
+        console.log(page);
+        $.ajax({
+            url: 'Index/'+page + " "+size+ " " + pencarian,
+            type: 'get',
+            success: function(response){
+                window.location.href = "http://localhost:5077/Home/Index?page=" + page + "&size=" + size + "&key=" + pencarian;
+            },
+            error: function (resultCari) {
+                console.log("Eror 500");
+                //window.location.href = "http://localhost:5077/Home/Index?page=" + page + "&size=10" + "&key=" + pencarian;
+                window.location.href = "http://localhost:5077/Home/Index?page=1&size=10&key=" + pencarian;
+            }
+        });
+    }
+    function Pencarian() {
+        var pencarian = document.getElementById("pencarian").value;
+        function GetURLParameter(sParam) {
+            var sPageURL = window.location.search.substring(1);
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) {
+                    return sParameterName[1];
+                }
+            }
+        }
+        var modul = GetURLParameter('page');
+        var size = GetURLParameter('size');
+
+        //document.getElementById("modul").innerHTML = modul;
+        //document.getElementById("aksi").innerHTML = size;
+        var page = modul;
+        $.ajax({
+            url: 'Index/' + page + " " + size + " " + pencarian,
+            type: 'get',
+            success: function (response) {
+                window.location.href = "http://localhost:5077/Home/Index?page=" + page + "&size=" + size + "&key=" + pencarian;
+            },
+            error: function (resultCari) {
+                window.location.href = "http://localhost:5077/Home/Index?page=1&size=10&key=" + pencarian;
+            }
+        });
+    }
+    function GetURLParameter(sParam) {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        var a =" ";
+        if (typeof sPageURL === "string" && sPageURL.length === 0) {
+            return a;
+        } else if (sPageURL === null) {
+            console.log("The string is null");
+        }
+        console.log(sPageURL)
+        for (var i = 0; i <= sURLVariables.length; i++) {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam) {
+                return sParameterName[1];
+            }
+        }
+    }
+</script>
