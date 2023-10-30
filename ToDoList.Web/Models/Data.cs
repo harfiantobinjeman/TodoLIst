@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 
 namespace ToDoList.Web.Models
 {
-    public class Data
+    public class data
     {
         public int idList { get; set; }
         public string nameList { get; set; }
@@ -11,7 +12,9 @@ namespace ToDoList.Web.Models
         public DateTime created { get; set; }
         public DateTime updated { get; set; }
 
-        [JsonIgnore]
-        public ICollection<ListItem> listItems { get; set; }
+        //public Collection<ListItem> list { get; set; }
+        //public ICollection<List<Data>> list { get; set; }
+        public List<listItem> listItems { get; set;}
+        
     }
 }

@@ -28,7 +28,7 @@ namespace ToDoList.Web.Controllers
 
         public async Task<IActionResult> Index(int page, int size, string? key)
         {
-            var list = new ListInfo();
+            var list = new listInfo();
             var sizeCount = 1;
             using (var client = new HttpClient())
             {
@@ -45,7 +45,7 @@ namespace ToDoList.Web.Controllers
                     if (Res.IsSuccessStatusCode)
                     {
                         var EmpResponse = Res.Content.ReadAsStringAsync().Result;
-                        list = JsonConvert.DeserializeObject<ListInfo>(EmpResponse);
+                        list = JsonConvert.DeserializeObject<listInfo>(EmpResponse);
                     }
                 }
                 else if(size != null || page != null || key != null)
@@ -53,8 +53,8 @@ namespace ToDoList.Web.Controllers
                     if (Resu.IsSuccessStatusCode)
                     {
                         var EmpResponse = Resu.Content.ReadAsStringAsync().Result;
-                        list = JsonConvert.DeserializeObject<ListInfo>(EmpResponse);
-                        var listItem = JsonConvert.DeserializeObject<ListInfo>(EmpResponse);
+                        list = JsonConvert.DeserializeObject<listInfo>(EmpResponse);
+                        var listItem = JsonConvert.DeserializeObject<listInfo>(EmpResponse);
                         sizeCount =(list.data.Count() / size)+1;
                         ViewBag.CountData = sizeCount;
                     }
@@ -103,7 +103,7 @@ namespace ToDoList.Web.Controllers
 
         public async Task<IActionResult> Edit( int id)
         {
-            var list = new ListInfo();
+            var list = new datas();
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(baseURL);
@@ -121,7 +121,7 @@ namespace ToDoList.Web.Controllers
                     //    ReferenceHandler = ReferenceHandler.Preserve
                     //};
                     //var jsonString = JsonSerializer.Serialize(EmpResponse, option);
-                    list = JsonConvert.DeserializeObject<ListInfo>(EmpResponse);
+                    list = JsonConvert.DeserializeObject<datas>(EmpResponse);
                 }
                 else
                 {
